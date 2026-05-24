@@ -83,4 +83,5 @@ summary['test_rate'] = (summary['total_tests']/summary['population'])*100
 # Save cleaned data
 daily.to_csv('data/cleaned/covid_daily_cleaned.csv', index=False)
 summary.to_csv('data/cleaned/covid_summary_cleaned.csv', index=False)
-
+ 
+# Proceed with SQL Analytics in SSMS
