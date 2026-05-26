@@ -1,0 +1,33 @@
+Name	Expression
+Total Confirmed Cases	SUM(fact_covid_summary[total_confirmed])
+Total Deaths	SUM(fact_covid_summary[total_deaths])
+Total Recovered	SUM(fact_covid_summary[total_recovered])
+Total Tests	SUM(fact_covid_summary[total_tests])
+Active Cases	SUM(fact_covid_summary[active_cases])
+Serious or Critical	SUM(fact_covid_summary[serious_or_critical])
+Population	SUM(fact_covid_summary[population])
+Criticality Cases	SUM(fact_criticality[cases])
+Criticality Deaths	SUM(fact_criticality[deaths])
+Avg Fatality Rate	AVERAGE(fact_criticality[fatality_rate])
+Weighted Fatality Rate	DIVIDE(sumx(fact_criticality, fact_criticality[cases]*fact_criticality[fatality_rate]),sum(fact_criticality[cases]),0)
+CFR %	divide([Total Deaths],[Total Confirmed Cases],0)*100
+Recovery Rate %	DIVIDE([Total Recovered],[Total Confirmed Cases],0)*100
+Cases per Million	DIVIDE([Total Confirmed Cases],[Population],0)*1000000
+Deaths per Million	DIVIDE([Total Deaths],[Population],0)*1000000
+Critical Case Ratio	divide([Total Deaths],[Active Cases],0)*100
+CFR Variance pp	[Avg Fatality Rate]-([CFR %]/100)
+7D Rolling Avg New Cases	AVERAGEX(DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date]),-7, DAY), CALCULATE(SUM(fact_covid_daily[new_cases])))
+WoW New Cases Growth %	"VAR ThisWeek = CALCULATE(sum(fact_covid_daily[new_cases]),DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date]),-7, DAY))
+VAR LastWeek = CALCULATE(sum(fact_covid_daily[new_cases]),DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date]) -7, -7, DAY))
+RETURN DIVIDE(ThisWeek-LastWeek, LastWeek)*100"
+MoM Case Growth %	"VAR ThisMonth = CALCULATE([Total Confirmed Cases], DATESMTD(dim_date[Date]))
+VAR LastMonth = CALCULATE([Total Confirmed Cases], DATEADD(dim_date[Date],-1, MONTH))
+RETURN DIVIDE(ThisMonth - LastMonth, LastMonth)*100"
+Case Acceleration	"VAR Recent7 = CALCULATE(SUM(fact_covid_daily[new_cases]), DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date]), -7, DAY))
+VAR Prior7 = CALCULATE(SUM(fact_covid_daily[new_cases]), DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date]) -7, -7, DAY))
+VAR Older7 = CALCULATE(SUM(fact_covid_daily[new_cases]), DATESINPERIOD(dim_date[Date], LASTDATE(dim_date[Date])-14, -7, DAY))
+RETURN (Recent7 - Prior7) - (Prior7 - Older7)
+-- Positive = Worsening, Negative = Improving, Zero = Plateau"
+Peak Daily New Cases	MAXX(all(dim_date[Date]), CALCULATE(SUM(fact_covid_daily[new_cases])))
+Date of Peak	MINX(FILTER(ALL(dim_date[Date]), CALCULATE(SUM(fact_covid_daily[new_cases])) = [Peak Daily New Cases]),dim_date[Date])
+Days Since peak	DATEDIFF([Date of Peak], TODAY(), DAY)
