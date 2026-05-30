@@ -61,6 +61,15 @@ plt.title("Boxplot of daily new cases")
 plt.savefig('python/outputs/charts/daily_cases_boxplot.png')
 plt.show()
 
+# Top countries as per cases
+top_countries_cases = summary.sort_values(by='total_confirmed', ascending=False).head(10)
+plt.figure(figsize=(12,6))
+sns.barplot(x='country', y='total_confirmed', data=top_countries_cases)
+plt.title('Top 10 Countries by Total Cases')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('python/outputs/charts/top_countries_cases.png')
+plt.show()
 
 
 
