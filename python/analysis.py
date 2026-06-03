@@ -55,11 +55,11 @@ plt.show()
 
 # Outliers Detection
 
-plt.figure(figsize = (10,6))
-sns.boxplot(x=daily['daily_new_cases'])
-plt.title("Boxplot of daily new cases")
-plt.savefig('python/outputs/charts/daily_cases_boxplot.png')
-plt.show()
+#plt.figure(figsize = (10,6))
+#sns.boxplot(x=daily['daily_new_cases'])
+#plt.title("Boxplot of daily new cases")
+#plt.savefig('python/outputs/charts/daily_cases_boxplot.png')
+#plt.show()
 
 # Top countries as per cases
 top_countries_cases = summary.sort_values(by='total_confirmed', ascending=False).head(10)
@@ -68,8 +68,16 @@ sns.barplot(x='country', y='total_confirmed', data=top_countries_cases)
 plt.title('Top 10 Countries by Total Cases')
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.savefig('python/outputs/charts/top_countries_cases.png')
+#plt.savefig('python/outputs/charts/top_countries_cases.png')
 plt.show()
 
-
+# Top countries as per deaths
+top_countries_deaths = summary.sort_values(by='total_deaths', ascending=False).head(10)
+plt.figure(figsize=(12,6))
+sns.barplot(x='country', y='total_deaths', data = top_countries_deaths)
+plt.title('Top 10 countries by total deaths')
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.savefig('python/outputs/charts/top_countries_deaths.png')
+plt.show()
 
