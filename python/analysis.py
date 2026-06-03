@@ -81,3 +81,10 @@ plt.tight_layout()
 plt.savefig('python/outputs/charts/top_countries_deaths.png')
 plt.show()
 
+# Correlation Heatmap
+plt.figure(figsize=(12,8))
+corr = summary.select_dtypes(include='number').corr()
+sns.heatmap(corr, annot = True, cmap='coolwarm')
+plt.title("Correlation Heatmap")
+plt.savefig('python/outputs/charts/correlation_heatmap.png')
+plt.show()
